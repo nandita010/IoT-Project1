@@ -49,9 +49,9 @@ String homePagePart1 = F(R"=====(
 </head>
 	<body>
 		<div class="flex-Container">
-		<h1> Temperature Example Website </h1>
+		<h1> MAX30100 Heart Monitor </h1>
       
-		<p>Welcome to my website displaying the temperature in ATU</p>
+		<p>Welcome to my website displaying the live heart rate and SP02 readings</p>
     
 		<table>
         <tr>
@@ -60,16 +60,29 @@ String homePagePart1 = F(R"=====(
           <th>Unit</th>
         </tr>
       <tr>
-          <td>Temperature</td>
+          <td>Heartrate</td>
           <td>
 		
     
  
     
   )=====");
-String homePagePart2 = F(R"=====( </td>
-         <td>Degree Cel</td>
+String homePagePart2 = F(R"=====(
+   </td>
+         <td>BPM</td>
         </tr>
+
+
+      <tr>
+      <td>SPO2</td>
+      <td>
+        )=====");
+
+      String homePagePart3 = F(R"=====(
+        </td>
+        <td>%</td>
+        </tr>
+      
       </table>
      </div>
 	</body>

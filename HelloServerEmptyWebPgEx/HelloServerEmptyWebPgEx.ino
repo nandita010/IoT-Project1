@@ -24,12 +24,11 @@
 #include <WebServer.h>
 #include <ESPmDNS.h>
 #include <MAX30100_PulseOximeter.h>
+#include "homepage.h"
 
-#define REPORTING_PERIOD_MS     1000
+#define REPORTING_PERIOD_MS   1000
 
 PulseOximeter pox;
-
-
 uint32_t tsLastReport = 0;
 
 const char* ssid = "Electronics";
@@ -41,12 +40,22 @@ void onBeatDetected() {
     Serial.println("♥ Beat!");
 }
 
+
+
+String getTemp() {
+  return "25";   // placeholder temperature
+}
+ 
 void handleRoot() {
   
-  String message = homePagePart1 + getTemp() + homePagePart2;
-  server.send(200, "text/html", message);
-}
+ String page = homePagePart1;
+page+= String(pox.getHeartRate());
+page+= homePagePart2;
+page+= String(pox.getSpO2());
+page+= homePagePart3;
 
+  server.send(200, "text/html", page);
+}
 void handleNotFound() {
   String message = "File Not Found\n\n";
   message += "URI: ";
@@ -63,42 +72,27 @@ void handleNotFound() {
 }
 
 void setup() {
- Serial.begin(9600);
 
-    Serial.print("Initializing pulse oximeter..");
+Serial.begin(115200);
+delay(1000);
+Serial.print("Initializing pulse oximeter..");
 
-    // Initialize sensor
-    if (!pox.begin()) {
-        Serial.println("FAILED");
-        for(;;);
-    } else {
-        Serial.println("SUCCESS");
-    }
+if (!pox.begin()) {
+      Serial.println("FAILED");
+      for(;;);
+  } else {
+      Serial.println("SUCCESS");
+  }
 
   // Configure sensor to use 7.6mA for LED drive
   pox.setIRLedCurrent(MAX30100_LED_CURR_7_6MA);
 
     // Register a callback routine
-    pox.setOnBeatDetectedCallback(onBeatDetected);
-}
+  pox.setOnBeatDetectedCallback(onBeatDetected);
 
-void loop(void) {
-    pox.update();
-
-    // Grab the updated heart rate and SpO2 levels
-    if (millis() - tsLastReport > REPORTING_PERIOD_MS) {
-        Serial.print("Heart rate:");
-        Serial.print(pox.getHeartRate());
-        Serial.print("bpm / SpO2:");
-        Serial.print(pox.getSpO2());
-        Serial.println("%");
-
-        tsLastReport = millis();
-    }
-    Serial.begin(115200);
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  Serial.println("");
+    
+WiFi.mode(WIFI_STA);
+WiFi.begin(ssid, password);
 
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
@@ -123,4 +117,25 @@ void loop(void) {
 
   server.begin();
   Serial.println("HTTP server started");
+}
+
+
+  // Initialize sensor
+  
+void loop() {
+
+  server.handleClient();
+  pox.update();
+
+    // Grab the updated heart rate and SpO2 levels
+    if (millis() - tsLastReport > REPORTING_PERIOD_MS) {
+        Serial.print("Heart rate:");
+        Serial.print(pox.getHeartRate());
+        Serial.print("bpm / SpO2:");
+        Serial.print(pox.getSpO2());
+        Serial.println("%");
+
+        tsLastReport = millis();
+    }
+
 }
