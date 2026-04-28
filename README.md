@@ -1,6 +1,5 @@
 **MATERNAL HEALTH TRACKER**
-This project heps track health data for women during pregnancy like their heartrate and blood oxygen, temperature and steps. The code consists of HTML, CSS and Javascript
-MAX30205- Heartrate sensor, MAX30101-Temperature sensor and GY-25 - Accelerometer are the sensors used with an ESP32 microcontroller and LCD display as output.
+This project heps track health data for women during pregnancy like their heartrate and blood oxygen, temperature and steps. The system displays all readings on an LCD screen and also uses a web-based dashboard built with HTML, CSS, and JavaScript. The ESP32 collects sensor data in real time and updates the webpage automatically, allowing users to view their health information easily and continuously.
 
 **🧩 Hardware Used**
 - ESP32 Dev Board
